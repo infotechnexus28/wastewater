@@ -14,6 +14,13 @@ function theme_enqueue_scripts()
     wp_localize_script('custom-ajax-script', 'ajax_object', array(
         'ajaxurl' => admin_url('admin-ajax.php')
     ));
+    // Enqueue Slick CSS
+    wp_enqueue_style('slick-css', 'https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css');
+    wp_enqueue_style('slick-theme-css', 'https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick-theme.css');
+
+    // Enqueue Slick JS
+    wp_enqueue_script('slick-js', 'https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js', array('jquery'), null, true);
+
 }
 add_action('wp_enqueue_scripts', 'theme_enqueue_scripts');
 

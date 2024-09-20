@@ -230,22 +230,51 @@ get_header(); ?>
     <div class="container">
         <h5 class="section-desc text-center"><?php echo get_field('testimonial_section_title_small'); ?></h5>
         <h5 class="section-title text-center pt-2"><?php echo get_field('testimonial_section_title'); ?></h5>
-        <div class="d-flex justify-content-center">
-        <?php for ($i = 0; $i < 5; $i++): ?>
-    <img width="21px" height="21px"
-         src="<?php echo get_stylesheet_directory_uri(); ?>/assets/images/star.svg" />
-<?php endfor; ?>
+
+        <div class="slick-slider">
+            <?php
+            $args = array(
+                'post_type' => 'testimonial', // Replace with your custom post type
+            );
+
+            $testimonial_query = new WP_Query($args);
+
+            if ($testimonial_query->have_posts()):
+                while ($testimonial_query->have_posts()):
+                    $testimonial_query->the_post();
+                    $testimonial_rating = get_field('testimonial_rating');
+                    $testimonial_image = get_field('testimonial_image');
+                    if ($testimonial_image) {
+                        $testimonial_image = $testimonial_image['url'];
+                    }
+                    ?>
+                    <div data-thumb="<?php echo $testimonial_image; ?>">
+                        <div class="d-flex justify-content-center">
+                            <?php
+                            $max_stars = 5;
+                            for ($i = 1; $i <= $testimonial_rating; $i++) {
+                                ?>
+                                <img width="21px" height="21px"
+                                    src="<?php echo get_stylesheet_directory_uri(); ?>/assets/images/star.svg');" />
+                                <?php
+                            }
+
+                            ?>
+                        </div>
+                        <div class="d-flex justify-content-center px-5">
+                            <p class="section-paragraph text-center mt-3 w-75 px-0 px-lg-5">
+                                <?php echo get_field('testimonial_description'); ?>
+                            </p>
+                        </div>
+                    </div>
+                    <?php
+                endwhile;
+                wp_reset_postdata();
+            endif;
+            ?>
         </div>
-        <div class="d-flex justify-content-center px-5">
-            <p class="section-paragraph text-center mt-3 w-75 px-0 px-lg-5">Cheers for your amazing service and we’ll
-                see you
-                in a
-                couple
-                years time when we
-                are
-                ready to upgrade 👍🏽</p>
-        </div>
-        <div class="d-flex justify-content-center">
+
+        <!-- <div class="d-flex justify-content-center">
             <div class="d-flex align-items-center gap-2 me-3">
                 <div class="d-flex align-items-center gap-1">
                     <div>
@@ -271,7 +300,7 @@ get_header(); ?>
                 </div>
             </div>
 
-        </div>
+        </div> -->
 
 </section>
 <section class="get-quote" id="get-quote">
@@ -303,7 +332,7 @@ get_footer();
 ?>
 <script>
     jQuery(document).ready(function ($) {
-       
+
         $('.services-container .nav-link').on('click', function (e) {
             e.preventDefault();
             let postId = $(this).attr('data-id');
@@ -329,5 +358,44 @@ get_footer();
 
         });
         $('.services-container .nav-link:first').trigger('click');
+
+        $('.slick-slider').slick({
+            dots: true,          // Enable dot navigation
+            arrows: true,        // Enable next/prev arrows
+            infinite: true,      // Infinite scrolling
+            speed: 300,
+            slidesToShow: 1,     // Number of slides to show
+            adaptiveHeight: true,
+            customPaging: function (slider, i) {
+                // Handle Previous and Next text for custom dots
+                var thumb = $(slider.$slides[i]).data('thumb');
+                if (i === 0) {
+                    return '<div class="custom-dot d-flex align-items-center">' +
+                        '<span> < Previous &nbsp </span>' +
+                        '<img src="' + thumb + '" alt="Thumb" />' +
+                        '</div>';
+                } else if (i === slider.$slides.length - 1) {
+                    return '<div class="custom-dot d-flex align-items-center"">' +
+                        '<img src="' + thumb + '" alt="Thumb" />' +
+                        '<span>&nbsp Next > </span>' +
+                        '</div>';
+                } else {
+                    return '<div class="custom-dot">' +
+                        '<img src="' + thumb + '" alt="Thumb" />' +
+                        '</div>';
+                }
+            },
+
+            // Add the active class to the custom dot when the slide changes
+            afterChange: function (event, slick, currentSlide) {
+                // Remove active class from all dots
+                $('.slick-dots li').removeClass('active');
+                // Add active class to the current dot
+                $('.slick-dots li').eq(currentSlide).addClass('active');
+            }
+        });
+
+        // Set the initial active class to the first dot
+        $('.slick-dots li').eq(0).addClass('active');
     });
 </script>
