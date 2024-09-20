@@ -81,6 +81,9 @@ function get_service_by_id()
             $service_data['service_name'] = $service_name;
             $service_data['service_description'] = $service_description;
             $service_data['service_image'] = $service_image;
+            $service_link = get_permalink($service->ID);
+            $service_data['service_link'] = $service_link;
+
             wp_send_json_success($service_data);
         } else {
             wp_send_json_error('Post not found or invalid post type.');

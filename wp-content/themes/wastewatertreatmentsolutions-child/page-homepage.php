@@ -95,7 +95,7 @@ get_header(); ?>
                         strictly to local council regulations. From understanding the intricacies of septic systems,
                         including primary and secondary tanks, to managing all necessary approvals, we guarantee a
                         flawless setup.</p>
-                    <a class="btn btn-cta-2 py-3 px-5 mt-2" href="">
+                    <a id="btn-service-link" class="btn btn-cta-2 py-3 px-5 mt-2" href="/sand-pads-compactions/">
                         Read More <svg class="ms-1" width="17" height="17" viewBox="0 0 17 17" fill="none"
                             xmlns="http://www.w3.org/2000/svg">
                             <path
@@ -319,6 +319,8 @@ get_footer();
                     $('#service-title-preview').html(response.data.service_name);
                     $('#service-image-preview').attr('src', response.data.service_image.url);
                     $('#service-description-preview').html(response.data.service_description);
+                    $('#btn-service-link').attr('href', response.data.service_link);
+                 
                 },
                 error: function (xhr, status, error) {
                     console.log('AJAX Error: ', error);
